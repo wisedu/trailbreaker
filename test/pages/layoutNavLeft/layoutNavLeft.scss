@@ -1,0 +1,34 @@
+[grid-layout="navLeft"] {
+    display: grid;
+    grid-template-areas:
+            "title      title"
+            "nav-left   nav-top"
+            "nav-left   custom"
+            "nav-left   filter"
+            "nav-left   operate"
+            "nav-left   content";
+
+    grid-template-rows: auto auto auto auto auto auto;
+    grid-template-columns: 100px 1fr;
+}
+[grid-item="title"] {
+    grid-area: title;
+}
+[grid-item="nav-left"] {
+    grid-area: nav-left;
+}
+[grid-item="nav-top"] {
+    grid-area: nav-top;
+}
+[grid-item="custom"] {
+    grid-area: custom;
+}
+[grid-item="filter"]{
+    grid-area: filter;
+}
+[grid-item="operate"]{
+    grid-area: operate;
+}
+[grid-item="content"]{
+    grid-area: content;
+}

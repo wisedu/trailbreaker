@@ -1,0 +1,41 @@
+{
+  "name": "trailbreaker",
+  "version": "1.0.0",
+  "description": "将grid layout布局转换成栅格布局",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "cheerio": "^0.22.0",
+    "async": "^2.1.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wisedu/ratchet.git"
+  },
+  "author": "https://github.com/wisedu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wisedu/ratchet/issues"
+  },
+  "homepage": "https://github.com/wisedu/ratchet#readme",
+  "keywords": [
+    "css",
+    "grid",
+    "layout",
+    "html",
+    "translate",
+    "to",
+    "grid",
+    "system",
+    "转换",
+    "栅格系统",
+    "布局",
+    "css布局"
+  ]
+}

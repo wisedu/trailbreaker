@@ -1,6 +1,6 @@
 {
   "name": "trailbreaker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "将grid layout布局转换成栅格布局",
   "main": "index.js",
   "directories": {

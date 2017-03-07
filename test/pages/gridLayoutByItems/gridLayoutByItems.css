@@ -1,0 +1,34 @@
+[grid-layout="navLeft"] {
+    display: grid;
+    grid-template-rows: auto auto auto auto auto auto;
+    grid-template-columns: 100px 1fr;
+}
+
+[grid-item="title"] {
+    grid-row: 1;
+    grid-column: 1 / span 2;
+}
+[grid-item="nav-left"] {
+    grid-row: 2 / span 5;
+    grid-column: 1;
+}
+[grid-item="nav-top"] {
+    grid-row: 2;
+    grid-column: 2;
+}
+[grid-item="custom"] {
+    grid-row: 3;
+    grid-column: 2;
+}
+[grid-item="filter"]{
+    grid-row: 4;
+    grid-column: 2;
+}
+[grid-item="operate"]{
+    grid-row: 5;
+    grid-column: 2;
+}
+[grid-item="content"]{
+    grid-row: 6;
+    grid-column: 2;
+}

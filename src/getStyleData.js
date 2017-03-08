@@ -64,15 +64,21 @@ function getGridLayoutStyleDataByNames(layoutModules, styleContent) {
 
     for(let module of layoutModules){
         let layoutName = module.layout;
-        let re = new RegExp(`\\[grid-layout=\"${layoutName}\"\\]\\s*\\{([^}]*)\\}`);
+        let re = getRegExp(layoutName, 'layout');
         let match = styleContent.match(re);
         if(match){
-            let layoutContent = match[1];
+            let layoutCss = match[1];
             let layoutItemsData = [];
-            if(/grid-template-areas/.test(layoutContent)){
-                layoutItemsData = getGridItemsDataFromArea(layoutContent);
+            //对于设置areas类型的处理
+            if(/grid-template-areas/.test(layoutCss)){
+                layoutItemsData = getGridItemsDataFromArea(layoutCss);
+            //    对于直接设置grid item的处理
             }else{
-                layoutItemsData = getGridItemsDataFromItems(layoutContent);
+                let gridItemsName = module.items;
+                //先取出行列的设定
+                layoutItemsData = getGridItemsDataFromArea(layoutCss);
+                //提取出每个节点的起始结束设定,并重置area字段
+                layoutItemsData.area = getGridItemsDataFromItems(gridItemsName, styleContent);
             }
 
             gridLayoutList.push({
@@ -83,6 +89,23 @@ function getGridLayoutStyleDataByNames(layoutModules, styleContent) {
     }
 
     return gridLayoutList;
+}
+
+/**
+ * 提取样式内容的正则表达式
+ * @param name layout或grid item的名称
+ * @param type 类型,layout或grid-item
+ * @returns {*}
+ */
+function getRegExp(name, type) {
+    let re = null;
+    if(type === 'layout'){
+        re = new RegExp(`\\[grid-layout=\"${name}\"\\]\\s*\\{([^}]*)\\}`);
+    }else{
+        re = new RegExp(`\\[grid-item=\"${name}\"\\]\\s*\\{([^}]*)\\}`);
+    }
+
+    return re;
 }
 
 /**
@@ -116,8 +139,71 @@ function getGridItemsDataFromArea(_gridStyle) {
     }
 }
 
-function getGridItemsDataFromItems(_styleContent) {
-    
+/**
+ * 获取grid item的设置,对非area设置的内容
+ * @param gridItemsName grid item的名称列表
+ * @param styleContent 样式内容
+ * @returns {Array}
+ */
+function getGridItemsDataFromItems(gridItemsName, styleContent) {
+    let area = [];
+    for(let itemName of gridItemsName){
+        let re = getRegExp(itemName, 'grid-item');
+        let match = styleContent.match(re);
+        let itemCss = match[1];
+        area.push(generateItemRowColumnSet(itemName, itemCss));
+    }
+    return area;
+}
+
+/**
+ * 添加col或row的数据
+ * @param name grid item的名称
+ * @param _style 该节点的样式设定
+ * @returns {{name: *}}
+ */
+function generateItemRowColumnSet(name, _style) {
+    let settingObj = {
+        name: name
+    };
+
+    let styleData = _style.split(';');
+    for(let item of styleData){
+        if(item.indexOf('grid-row') > -1){
+            generateItemRowColumnStartEnd(item, 'row', settingObj);
+        }else if(item.indexOf('grid-column') > -1){
+            generateItemRowColumnStartEnd(item, 'col', settingObj);
+        }
+    }
+
+    return settingObj;
+}
+
+/**
+ * 对直接设置grid item的形式,获取起始结束数据
+ * @param _set 样式内容
+ * @param _type 类型row或col
+ * @param settingObj 要添加到的数据对象
+ */
+function generateItemRowColumnStartEnd(_set, _type, settingObj) {
+    let start = 0;
+    let end = 0;
+    let setting = _set.split(':')[1];
+    //对存在跨列的处理
+    if(setting.indexOf('span') > -1){
+        let spanSetting = setting.replace('span', '').split('/');
+        start = parseInt(spanSetting[0], 10) - 1;
+        end = start + parseInt(spanSetting[1], 10) - 1;
+    }else{
+        let settingNum = parseInt(setting, 10);
+        start = settingNum - 1;
+        end = settingNum - 1;
+    }
+
+    settingObj[_type] = {
+        start: start,
+        end: end
+    };
 }
 
 

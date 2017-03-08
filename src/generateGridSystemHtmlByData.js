@@ -1,3 +1,6 @@
+let cheerio = require('cheerio');
+let utils = require('./utils');
+
 /**
  * 通过栅格数据生成栅格html
  * @param _data
@@ -16,7 +19,32 @@ function dataConvertIntoHtml(_data) {
         html += getRow(item);
     }
 
+    //移除只存在单列,且列是撑满整行的
+    html = removeOnlyOneRow(html);
     return html;
+}
+
+/**
+ * 移除只存在单列,且列是撑满整行的
+ * @param html
+ * @returns {*}
+ */
+function removeOnlyOneRow(html) {
+    let $ = cheerio.load(html);
+    $('.bh-col-md-12').each(function () {
+        let $col = $(this);
+        let $colClone = $col.clone();
+        let $parent = $col.parent();
+        if($parent.children().length === 1){
+            $colClone.removeClass('bh-col-md-12');
+            if(utils.trim($colClone.attr('class')).length === 0){
+                $colClone.removeAttr('class');
+            }
+            $parent.before($colClone);
+            $parent.remove();
+        }
+    });
+    return $.html();
 }
 
 /**

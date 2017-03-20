@@ -1,16 +1,17 @@
 {
   "name": "trailbreaker",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "将grid layout布局转换成栅格布局",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
   "dependencies": {
-    "cheerio": "^0.22.0",
+    "cheerio": "^0.22.0"
+  },
+  "devDependencies": {
     "async": "^2.1.5"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

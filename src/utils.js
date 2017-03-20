@@ -1,25 +1,6 @@
 var fs = require('fs');
 var path = require('path');
 
-
-/**
- * 同步遍历文件夹，返回所有文件夹和文件路径
- * @param _path
- * @returns {{files: Array, folders: Array}}
- */
-module.exports.scanFolder = function(_path) {
-    return scanFolder(_path);
-};
-
-/**
- * 异步读文件
- * @param readPath 读取的文件地址
- * @param callback
- */
-module.exports.readFile = function(readPath, callback) {
-    readFile(readPath, callback);
-};
-
 /**
  * 去掉字符串两端的空格
  * @param str
@@ -81,49 +62,4 @@ function trim(str) {
     return newStr;
 }
 
-function scanFolder(_path) {
-    var fileList = [],
-        folderList = [],
-        walk = function(path, fileList, folderList) {
-            files = fs.readdirSync(path);
-            files.forEach(function(item) {
-                var tmpPath = /\/$/.test(path) ? path + item : path + '/' + item,
-                    stats = fs.statSync(tmpPath);
 
-                if (stats.isDirectory()) {
-                    walk(tmpPath, fileList, folderList);
-                    folderList.push(tmpPath);
-                } else {
-                    fileList.push(tmpPath);
-                }
-            });
-        };
-
-    walk(_path, fileList, folderList);
-
-    return {
-        'files': fileList,
-        'folders': folderList
-    };
-}
-
-function readFile(readPath, callback) {
-    fs.readFile(readPath, 'utf-8', function(err, data) {
-        if (err) {
-            console.log(err);
-            return callback(null, { 'type': 'error', 'message': err, 'path': readPath });
-        } else {
-            if (/\.json$/.test(readPath)) {
-                try {
-                    data = JSON.parse(data);
-                    callback(null, { 'type': 'success', 'data': data, 'path': readPath });
-                } catch (err) {
-                    console.log(err);
-                    callback(null, { 'type': 'error', 'message': err, 'path': readPath });
-                }
-            } else {
-                callback(null, { 'type': 'success', 'data': data, 'path': readPath });
-            }
-        }
-    });
-}
